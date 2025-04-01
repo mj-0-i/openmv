@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-import sensor, image, time
+import sensor, image, time,sys
+sys.path.append("openmv_project")
+import config,vision,comm,safety
 from config import *
 from vision import ArmAnalyzer
 from comm import ProtocolHandler
