@@ -8,24 +8,22 @@ class ProtocolHandler:
         self.seq_num = 0
 
     def send_acu_data(self, acu_id, x_mm, y_mm, pressure):
-        """
-        数据包格式:
-        [HEAD][SEQ][ID][X][Y][PRESS][CRC]
-        0xAA  0x00 0x00 0x0000 0x0000 0x00 0x00
-        """
+        # 数据压缩：将坐标映射到12位（0-4095）
+        x_enc = min(max(x_mm, 0), 4095)
+        y_enc = min(max(y_mm, 0), 4095)
         payload = bytearray([
-            0xAA,  # 帧头
+            0xAA,
             self.seq_num % 256,
             ord(acu_id[0]), ord(acu_id[1]), ord(acu_id[2]),
-            (x_mm >> 8) & 0xFF, x_mm & 0xFF,
-            (y_mm >> 8) & 0xFF, y_mm & 0xFF,
+            (x_enc >> 4) & 0xFF,  # 高8位
+            ((x_enc & 0xF) << 4) | ((y_enc >> 8) & 0xF),  # 低4位 + 高4位
+            y_enc & 0xFF,  # 低8位
             pressure
         ])
-
         crc = self._calc_crc(payload)
         packet = payload + bytearray([crc])
         self.uart.write(packet)
-        self.seq_num +=1
+        self.seq_num += 1
 
     def _calc_crc(self, data):
         crc = 0

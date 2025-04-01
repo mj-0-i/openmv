@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 import sensor, image, time,sys
 sys.path.append("openmv_project")
-import config,vision,comm,safety
+import config,vision,comm,safety,envrionment
 from config import *
 from vision import ArmAnalyzer
 from comm import ProtocolHandler
 from safety import SafetyMonitor
+from environment import EnvAdapter
 
 # ------------------ 初始化 ------------------
 sensor.reset()
@@ -20,12 +21,14 @@ analyzer = ArmAnalyzer()
 comm = ProtocolHandler()
 safety = SafetyMonitor()
 clock = time.clock()
+env_adapter = EnvAdapter()
 
 # ------------------ 主循环 ------------------
 frame_counter = 0
 while True:
     clock.tick()
     img = sensor.snapshot()
+    env_adapter.adjust_exposure(img)  # 新增行
 
     # 性能优化：跳帧处理
     frame_counter = (frame_counter + 1) % PERF_SETTINGS['frame_skip']
