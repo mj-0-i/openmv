@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sensor, image, time, sys
 sys.path.append("openmv_project")
-import config, vision, comm, safety, envrionment
+import config, vision, comm, safety, environment
 from config import *
 from vision import ArmAnalyzer
 from comm import ProtocolHandler
@@ -30,7 +30,7 @@ roi = (80, 40, 160, 120)  # 仅处理图像中心区域
 frame_counter = 0
 while True:
     clock.tick()
-    img = sensor.snapshot().crop(roi)  # 裁剪ROI区域
+    img = sensor.snapshot()
     env_adapter.adjust_exposure(img)  # 新增行
 
     # 性能优化：跳帧处理
@@ -43,12 +43,9 @@ while True:
         comm.send_alert("MOTION_ALERT")
         continue
 
-    temp = safety.check_temperature()
-    if temp > 60:
-        comm.send_alert("OVERHEAT")
-        break
 
     # 视觉分析
+    print("Calling detect_anatomy with img:", img)
     anatomy = analyzer.detect_anatomy(img)
     if not anatomy:
         continue
@@ -77,7 +74,7 @@ while True:
 
     # 性能显示
     fps = clock.fps()
-    img.draw_string(5, 5, f"FPS:{fps:.1f} TEMP:{temp:.1f}C", color=(255, 0, 0))
+    img.draw_string(5, 5, f"FPS:{fps:.1f} ", color=(255, 0, 0))
 
     # 动态调整帧率
     if fps < PERF_SETTINGS['target_fps'] * 0.8:

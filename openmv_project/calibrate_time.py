@@ -14,7 +14,7 @@ INTERVAL = 2              # 采样间隔（秒）
 # ******************** 可视化配置 ********************
 TEXT_COLOR = (255, 0, 0)  # 红色文字提示
 BOX_COLOR = (0, 255, 0)   # 绿色方框
-JSON_FILE_PATH = "openmv_project/calibration.json"
+JSON_FILE_PATH = "calibration.json"
 
 def run_calibration():
     # **删除旧的 JSON 文件**
