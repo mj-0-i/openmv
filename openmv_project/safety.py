@@ -18,7 +18,7 @@ class SafetyMonitor:
                 # 使用更稳健的方法计算差异
                 diff = current_copy.difference(prev_copy)
                 stats = diff.get_statistics()
-                motion_level = stats.mean()[0]  # 使用平均值而不是l_mean
+                motion_level = stats.l_mean()  # 使用l_mean
                 
                 # 调整阈值和添加去抖动
                 if motion_level > 30:  # 稍微提高阈值
