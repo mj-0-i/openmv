@@ -38,10 +38,22 @@ while True:
     if frame_counter != 0:
         continue
 
-    # 安全监测
-    if not safety.check_motion(img):
-        comm.send_alert("MOTION_ALERT")
-        continue
+      # 安全监测
+    try:  # 新增：添加异常处理
+       is_safe = safety.check_motion(img)
+       if not is_safe:
+           print("MOTION_ALERT detected!")  # 替代方案，而不是comm.send_alert
+           motion_alert_counter += 1
+           if motion_alert_counter > 5:  # 如果连续5帧都检测到运动，重置安全监视器
+               safety.reset()
+               motion_alert_counter = 0
+           continue
+       else:
+           motion_alert_counter = 0  # 如果安全，重置计数器
+    except Exception as e:
+       print(f"Error in motion detection: {e}")
+       safety.reset()  # 出现异常时重置安全监视器
+       continue
 
 
     # 视觉分析

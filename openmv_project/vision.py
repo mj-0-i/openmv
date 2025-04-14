@@ -69,15 +69,15 @@ class ArmAnalyzer:
             
             # 选择最大连通域并过滤非手臂形状
             arm = max(blobs, key=lambda b: b.area())
-            if arm.w / arm.h < 0.3 or arm.w / arm.h > 3:
+            if arm.w() / arm.h() < 0.3 or arm.w() / arm.h() > 3:
                 return None
             
             # 改进关键线检测：限制角度范围
             anatomy = {'contour': arm}
-            elbow_roi = (arm.x, arm.y + arm.h // 4, arm.w, arm.h // 3)
+            elbow_roi = (arm.x(), arm.y() + arm.h() // 4, arm.w(), arm.h() // 3)
             anatomy['elbow_line'] = self._find_dominant_line(img, elbow_roi, theta_range=(70, 110))
             
-            wrist_roi = (arm.x, arm.y + 3 * arm.h // 4, arm.w, arm.h // 5)
+            wrist_roi = (arm.x(), arm.y() + 3 * arm.h() // 4, arm.w(), arm.h ()// 5)
             anatomy['wrist_line'] = self._find_dominant_line(img, wrist_roi, theta_range=(80, 100))
             
             return anatomy
