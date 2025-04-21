@@ -18,22 +18,22 @@ COLOR_THRESHOLDS = {
 ACU_DB = {
     "LI11": {
         "name": "曲池",
-        "ref_point": "elbow_line_end",
-        "offset_cm": (0.5, 0),
+        "ref_point": "elbow_line_end",  # 保留兼容原有代码
+        "offset_cm": (0.5, 0),          # 横向偏移
         "depth_cm": 1.2,
         "pressure": 80
     },
     "PC3": {
         "name": "曲泽",
-        "ref_point": "wrist_line_mid",
-        "offset_cm": (2.0, 0.5),
+        "ref_point": "wrist_line_mid",  # 保留兼容原有代码
+        "offset_cm": (0.5, 0.5),        # 微调偏移
         "depth_cm": 0.8,
         "pressure": 70
     },
     "HT7": {
         "name": "神门",
-        "ref_point": "wrist_line_ulnar",
-        "offset_cm": (0.0, -1.0),
+        "ref_point": "wrist_line_ulnar", # 保留兼容原有代码
+        "offset_cm": (0.0, -1.0),        # 微调偏移
         "depth_cm": 0.5,
         "pressure": 60
     }

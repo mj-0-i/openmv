@@ -4,8 +4,7 @@
 # Copyright (c) 2013-2024 OpenMV LLC. All rights reserved.
 # https://github.com/openmv/openmv/blob/master/LICENSE
 
-import sensor, image, time, os, ml, uos, gc
-from ulab import numpy as np
+import sensor, time, ml, uos, gc
 
 sensor.reset()                         # Reset and initialize the sensor.
 sensor.set_pixformat(sensor.RGB565)    # Set pixel format to RGB565 (or GRAYSCALE)

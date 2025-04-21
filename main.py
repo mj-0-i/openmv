@@ -28,6 +28,7 @@ roi = (80, 40, 160, 120)  # 仅处理图像中心区域
 
 # ------------------ 主循环 ------------------
 frame_counter = 0
+motion_alert_counter = 0  # 添加这一行，定义motion_alert_counter变量
 while True:
     clock.tick()
     img = sensor.snapshot()
@@ -59,6 +60,7 @@ while True:
     # 视觉分析
     print("Calling detect_anatomy with img:", img)
     anatomy = analyzer.detect_anatomy(img)
+    print(f"Anatomy detection result: {anatomy}")
     if not anatomy:
         continue
 
@@ -72,7 +74,13 @@ while True:
             min(contour.h() + 40, 160)
         )
 
-    # 穴位定位与发送
+     # 确保ACU_DB被正确导入
+    if 'ACU_DB' not in globals():
+       print("错误: ACU_DB未定义，尝试重新导入")
+       from config import ACU_DB
+
+       # 穴位定位与发送
+    print(f"可用穴位: {list(ACU_DB.keys())}")  # 调试输出
     for acu_id in ACU_DB.keys():
         pos = analyzer.calculate_acu_point(anatomy, acu_id)
         if pos:
@@ -81,8 +89,8 @@ while True:
             comm.send_acu_data(acu_id, x_mm, y_mm, ACU_DB[acu_id]['pressure'])
 
             # 可视化
-            img.draw_cross(pos[0], pos[1], color=(0, 255, 0))
-            img.draw_string(pos[0], pos[1], acu_id)
+            img.draw_cross(pos[0], pos[1], color=(0, 255, 0),size=5)
+            img.draw_string(pos[0], pos[1], f"{acu_id}: {ACU_DB[acu_id]['name']}")
 
     # 性能显示
     fps = clock.fps()
